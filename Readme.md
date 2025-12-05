@@ -1,6 +1,6 @@
-# LocNet: GNSS Position Optimizer
+# LocNet: GNSS Position Optimizer API
 
-**LocNet** is an advanced tool designed to estimate the **True Position** from noisy GNSS (Global Navigation Satellite System) data. It leverages a combination of statistical methods, recursive estimation, and deep learning architectures to correct GPS drift and improve accuracy.
+**LocNet** is a backend API service designed to estimate the **True Position** from noisy GNSS (Global Navigation Satellite System) data. It exposes REST endpoints to process GPS data using statistical filters and Deep Learning models.
 
 ---
 
@@ -8,108 +8,88 @@
 
 GPS sensors often suffer from noise, drift, and signal multipath errors. **LocNet** addresses these issues by employing four distinct approaches to refine the coordinate data:
 
-1.  **Statistical Median**: A robust baseline that filters out random noise by finding the central tendency of the data.
-2.  **Kalman Filter**: A recursive mathematical algorithm that estimates the state of the system (position) by minimizing the mean squared error.
-3.  **LSTM (Long Short-Term Memory)**: A Recurrent Neural Network (RNN) designed to learn sequential dependencies and temporal patterns from raw GPS time-series data.
-4.  **CNN (Convolutional Neural Network)**: A computer vision approach that converts the GPS trajectory into a **Time-Encoded Occupancy Grid** to visually analyze the shape and direction of the drift.
+1.  **Statistical Median**: A robust baseline that filters out random noise.
+2.  **Kalman Filter**: A recursive mathematical algorithm for state estimation.
+3.  **LSTM (Long Short-Term Memory)**: A Recurrent Neural Network (RNN) for sequential pattern learning.
+4.  **CNN (Convolutional Neural Network)**: A computer vision approach using Time-Encoded Occupancy Grids.
 
 ---
 
-## Key Features
+## Technical Stack
 
--   **Multi-Model Analysis**: Compare results from deterministic math models vs. AI models side-by-side.
--   **Interactive Dashboard**: Built with [Streamlit](https://streamlit.io/) for a seamless, user-friendly experience.
--   **Deep Learning Integration**: Uses **PyTorch** for training LSTM and CNN models directly within the app.
--   **Visualizations**:
-    -   Real-time training progress bars.
-    -   Interactive scatter plots showing Raw Data, Kalman Paths, and Model Predictions.
-    -   Visualization of the "Time-Encoded Image" seen by the CNN.
--   **Customizable Hyperparameters**: Adjust Look-Back Window, Training Epochs, Learning Rate, and HDOP Thresholds.
+-   **Framework**: Flask (Python)
+-   **Database**: MySQL
+-   **Machine Learning**: PyTorch, Scikit-Learn
+-   **Math/Processing**: NumPy, Pandas, PyKalman
 
 ---
 
 ## Installation
 
 ### Prerequisites
--   **Python 3.8** or newer
--   **pip** (Python package installer)
+-   **Python 3.8+**
+-   **MySQL Server** running locally or remotely.
 
 ### Steps
 
-1.  **Clone the Repository** (if applicable) or navigate to the project folder.
+1.  **Clone the Repository**
     ```bash
     cd path/to/GPS_Predictor
     ```
 
 2.  **Install Dependencies**
-    Install the required Python libraries using the `requirements.txt` file:
     ```bash
     pip install -r requirements.txt
     ```
+
+3.  **Configure Database**
+    Set the following environment variables (defaults provided below):
+    -   `DB_HOST` (default: localhost)
+    -   `DB_USER` (default: root)
+    -   `DB_PASSWORD` (default: empty)
+    -   `DB_NAME` (default: locnet_db)
 
 ---
 
 ## Usage
 
-1.  **Start the Application**
-    Run the Streamlit app from your terminal:
+1.  **Start the Server**
     ```bash
-    streamlit run app.py
+    python app.py
     ```
+    The server will start on `http://localhost:5000`.
 
-2.  **Access the Dashboard**
-    The app will open automatically in your default web browser.
+2.  **API Endpoints**
 
-3.  **Upload Data**
-    -   Upload a CSV or TXT file containing your GPS data.
-    -   **Required Columns**: The file must contain columns for Latitude and Longitude (e.g., `Lat`, `Lon`, `Latitude`, `Longitude`).
-    -   *Optional*: An `HDOP` column can be used for filtering low-quality data.
+    ### `POST /upload`
+    Upload a CSV file containing GPS data.
+    -   **Body**: `form-data` with key `file` (CSV file).
+    -   **Response**: JSON with `upload_id` and status.
 
-4.  **Train & Analyze**
-    -   Adjust settings in the sidebar if needed.
-    -   Click **Train LSTM** or **Train CNN** to train the deep learning models on your data.
-    -   View the **Final Results** tab to see a comparative analysis and map visualization.
+    ### `GET /predict/<upload_id>`
+    Trigger processing and prediction for a specific dataset.
+    -   **Response**: JSON containing optimized coordinates from all models.
+        ```json
+        {
+          "median": {"lat": ..., "lon": ...},
+          "kalman": {"lat": ..., "lon": ...},
+          "lstm": {"lat": ..., "lon": ...},
+          "cnn": {"lat": ..., "lon": ...}
+        }
+        ```
 
 ---
 
 ## Methodologies
 
 ### 1. Statistical Median
-Calculates the geometric median of the latitude and longitude to provide a stable reference point, effectively ignoring outliers.
+Calculates the geometric median to ignore outliers.
 
 ### 2. Kalman Filter
-Implements a standard Kalman Filter to smooth the trajectory. It predicts the next state based on the previous state and corrects it using the new measurement.
+Standard Kalman Filter to smooth the trajectory.
 
 ### 3. LSTM (Deep Learning)
-Treats the GPS path as a time-series sequence.
--   **Input**: Sequence of $(Lat, Lon)$ coordinates.
--   **Architecture**: 2-layer LSTM with Dropout.
--   **Goal**: Predict the "True" position based on the history of movement.
+Treats the GPS path as a time-series sequence. Trains on the uploaded trajectory to predict the final "true" position.
 
 ### 4. CNN (Computer Vision)
-Treats the GPS path as an image.
--   **Technique**: **Time-Encoded Occupancy Grid**.
--   **Process**:
-    1.  Normalize the trajectory segment to a $32 \times 32$ grid.
-    2.  Encode time as pixel intensity (older points = dim, newer points = bright).
-    3.  Pass this image through a CNN to predict the coordinate offset.
-
----
-
-## Dependencies
-
--   `streamlit`
--   `pandas`
--   `numpy`
--   `matplotlib`
--   `torch` (PyTorch)
--   `scikit-learn`
--   `pykalman`
-
----
-
-## Contributing
-
-Contributions, issues, and feature requests are welcome! Feel free to check the [issues page](#).
-
----
+Converts the trajectory into a **Time-Encoded Occupancy Grid** image and uses a CNN to predict the coordinate offset.

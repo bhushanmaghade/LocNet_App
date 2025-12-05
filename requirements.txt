@@ -1,7 +1,8 @@
-streamlit
+flask
 pandas
 numpy
 matplotlib
 torch
 scikit-learn
 pykalman
+mysql-connector-python

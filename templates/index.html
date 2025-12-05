@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LocNet: GNSS Position Optimizer</title>
+    <!-- CSS -->
+    <link rel="stylesheet" href="/static/style.css">
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <div class="container">
+        <!-- Header -->
+        <header>
+            <h1>🛰️ LocNet</h1>
+            <p>GNSS Localization Optimizer & Visualization</p>
+        </header>
+
+        <!-- Upload Section -->
+        <div class="card upload-card" id="upload-area">
+            <div class="upload-icon">📂</div>
+            <h3>Upload GPS Data</h3>
+            <p>Drag & drop CSV or click to browse</p>
+            <input type="file" id="file-input" accept=".csv, .txt" hidden>
+            <button class="btn" onclick="document.getElementById('file-input').click()">Select File</button>
+            <div id="upload-status"></div>
+        </div>
+
+        <!-- Loading Spinner -->
+        <div id="loading" class="hidden">
+            <div class="spinner"></div>
+            <p id="loading-text" style="color: var(--text-secondary); margin-top: 1rem;">Processing...</p>
+        </div>
+
+        <!-- Results Section -->
+        <div id="results-area" class="hidden">
+
+            <!-- Metrics Grid -->
+            <div class="grid-container">
+                <div class="card metric-card">
+                    <h4>Median</h4>
+                    <div id="res-median" class="metric-val">-</div>
+                </div>
+                <div class="card metric-card">
+                    <h4>Kalman Filter</h4>
+                    <div id="res-kalman" class="metric-val">-</div>
+                </div>
+                <div class="card metric-card">
+                    <h4>LSTM (RNN)</h4>
+                    <div id="res-lstm" class="metric-val">-</div>
+                </div>
+                <div class="card metric-card">
+                    <h4>CNN (Vision)</h4>
+                    <div id="res-cnn" class="metric-val">-</div>
+                </div>
+            </div>
+
+            <!-- Map -->
+            <div class="card map-card">
+                <div id="map"></div>
+            </div>
+
+        </div>
+    </div>
+
+    <div id="toast-container"></div>
+
+    <!-- Scripts -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <script src="/static/script.js"></script>
+
+</body>
+
+</html>
