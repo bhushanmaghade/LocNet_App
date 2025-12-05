@@ -1,6 +1,6 @@
 # LocNet: GNSS Position Optimizer
 
-**LocNet** is a backend API service designed to estimate the **True Position** from noisy GNSS (Global Navigation Satellite System) data. It exposes REST endpoints to process GPS data using statistical filters and Deep Learning models.
+**LocNet** is a webapp to estimate the **True Position** from noisy GNSS (Global Navigation Satellite System) data. It exposes REST endpoints to process GPS data using statistical filters and Deep Learning models.
 
 ---
 
@@ -9,9 +9,7 @@
 GPS sensors often suffer from noise, drift, and signal multipath errors. **LocNet** addresses these issues by employing four distinct approaches to refine the coordinate data:
 
 1.  **Statistical Median**: A robust baseline that filters out random noise.
-2.  **Kalman Filter**: A recursive mathematical algorithm for state estimation.
 3.  **LSTM (Long Short-Term Memory)**: A Recurrent Neural Network (RNN) for sequential pattern learning.
-4.  **CNN (Convolutional Neural Network)**: A computer vision approach using Time-Encoded Occupancy Grids.
 
 ---
 
