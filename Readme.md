@@ -1,4 +1,4 @@
-# LocNet: GNSS Position Optimizer API
+# LocNet: GNSS Position Optimizer
 
 **LocNet** is a backend API service designed to estimate the **True Position** from noisy GNSS (Global Navigation Satellite System) data. It exposes REST endpoints to process GPS data using statistical filters and Deep Learning models.
 
