@@ -88,6 +88,3 @@ Standard Kalman Filter to smooth the trajectory.
 
 ### 3. LSTM (Deep Learning)
 Treats the GPS path as a time-series sequence. Trains on the uploaded trajectory to predict the final "true" position.
-
-### 4. CNN (Computer Vision)
-Converts the trajectory into a **Time-Encoded Occupancy Grid** image and uses a CNN to predict the coordinate offset.
