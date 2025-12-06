@@ -71,8 +71,7 @@ GPS sensors often suffer from noise, drift, and signal multipath errors. **LocNe
         {
           "median": {"lat": ..., "lon": ...},
           "kalman": {"lat": ..., "lon": ...},
-          "lstm": {"lat": ..., "lon": ...},
-          "cnn": {"lat": ..., "lon": ...}
+          "lstm": {"lat": ..., "lon": ...}
         }
         ```
 
